@@ -1,0 +1,89 @@
+{
+  "name": "code-ki-v6",
+  "displayName": "Code KI V6",
+  "description": "Lokale Python-KI fuer VS Code mit V6 Minimal Product Flow und isoliertem V5-Testlabor.",
+  "version": "6.0.0",
+  "publisher": "mickh-local",
+  "license": "UNLICENSED",
+  "author": "mickh",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "keywords": [
+    "python",
+    "local-ai",
+    "assistant",
+    "vscode"
+  ],
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:codeKIV3.openAssistant",
+    "onCommand:codeKIV3.openAssistantPanel",
+    "onView:codeKIV3.sidebarView",
+    "onCommand:codeKIV3.runApplyFlowSelfTest"
+  ],
+  "main": "./extension.js",
+  "files": [
+    "apply_engine.js",
+    "extension.js",
+    "resources/icon.svg",
+    "package.json",
+    "README.md",
+    "LICENSE.txt"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "codeKIV3.openAssistant",
+        "title": "Code KI V6: Seitenleiste oeffnen"
+      },
+      {
+        "command": "codeKIV3.openAssistantPanel",
+        "title": "Code KI V6: Legacy-Panel oeffnen"
+      },
+      {
+        "command": "codeKIV3.runApplyFlowSelfTest",
+        "title": "Code KI: Apply-Flow Selftest (S2)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codeKIV3ViewContainer",
+          "title": "Code KI",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "codeKIV3ViewContainer": [
+        {
+          "id": "codeKIV3.sidebarView",
+          "name": "Agent",
+          "type": "webview"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Code KI",
+      "properties": {
+        "codeKI.serverUrl": {
+          "type": "string",
+          "default": "http://127.0.0.1:8787",
+          "description": "Lokale Backend-URL fuer Code KI."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "package": "npx --yes @vscode/vsce package --allow-missing-repository",
+    "test": "node --test tests/*.test.js",
+    "test:integration": "node integration/verifySelftestReport.js",
+    "test:all": "npm run test && npm run test:integration"
+  },
+  "devDependencies": {
+    "mocha": "^10.8.2"
+  }
+}

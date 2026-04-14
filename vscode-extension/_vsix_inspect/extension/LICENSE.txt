@@ -1,0 +1,3 @@
+This project is provided for local educational use within the Code KI Abschlussprojekt.
+
+No redistribution rights are granted.

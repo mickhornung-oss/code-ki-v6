@@ -1,0 +1,7 @@
+{
+  "v5_lab": {
+    "enabled": false,
+    "experimental": true,
+    "description": "Isolierter Marker fuer V5-Testlabor. Nicht Teil der stabilen V4-Hauptlinie."
+  }
+}
