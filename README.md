@@ -1,5 +1,9 @@
 # Code KI V6
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![Version](https://img.shields.io/badge/version-v6-green.svg)](https://github.com/mickhornung-oss/code-ki-v6/releases)
+
 Lokale Python-KI fuer Visual Studio Code mit produktnahem Standardmodus:
 Prompt rein, Code raus - mit Leitplanken im Hintergrund.
 
