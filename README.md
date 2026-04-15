@@ -11,7 +11,7 @@ Prompt rein, Code raus - mit Leitplanken im Hintergrund.
 
 **VS Code Extension Agent Panel:**
 
-![Code KI V6 Agent Panel](images/code-ki-v6-agent-panel.png)
+![Code KI V6 Agent Panel](images/code-ki-v6-demo.png)
 
 *Agent Mode: Wähle deinen Modus (V6 Produkt, Projekt-Agent, etc.), beschreibe deine Aufgabe, und lass die KI arbeiten.*
 
