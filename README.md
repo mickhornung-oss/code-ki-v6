@@ -3,6 +3,24 @@
 Lokale Python-KI fuer Visual Studio Code mit produktnahem Standardmodus:
 Prompt rein, Code raus - mit Leitplanken im Hintergrund.
 
+## ⚡ Quick Start
+
+```powershell
+# 1. Virtual Environment aktivieren
+.\venv\Scripts\Activate.ps1
+
+# 2. Abhaengigkeiten installieren
+pip install -r requirements.txt
+
+# 3. Backend starten
+powershell -File .\scripts\start_backend.ps1
+
+# 4. VS Code Extension laden
+# Öffne Code KI V6 in VS Code → Extension aktiviert sich automatisch
+```
+
+→ Dann: Command Palette → "Code KI V6: Seitenleiste oeffnen"
+
 ## Status
 
 - V4 bleibt stabile technische Basis.
