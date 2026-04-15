@@ -7,6 +7,14 @@
 Lokale Python-KI fuer Visual Studio Code mit produktnahem Standardmodus:
 Prompt rein, Code raus - mit Leitplanken im Hintergrund.
 
+## 📸 Demo
+
+**VS Code Extension Agent Panel:**
+
+![Code KI V6 Agent Panel](images/code-ki-v6-agent-panel.png)
+
+*Agent Mode: Wähle deinen Modus (V6 Produkt, Projekt-Agent, etc.), beschreibe deine Aufgabe, und lass die KI arbeiten.*
+
 ## ⚡ Quick Start
 
 ```powershell
