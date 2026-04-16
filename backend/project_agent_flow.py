@@ -1,10 +1,16 @@
 from __future__ import annotations
 
-from backend.project_guardrails import (detect_external_blocker,
-                                        detect_out_of_scope_changes,
-                                        resolve_project_root)
-from backend.schemas import (AssistRequest, ProjectAgentFlow,
-                             StructuredAnswerV3, V4PlanStep)
+from backend.project_guardrails import (
+    detect_external_blocker,
+    detect_out_of_scope_changes,
+    resolve_project_root,
+)
+from backend.schemas import (
+    AssistRequest,
+    ProjectAgentFlow,
+    StructuredAnswerV3,
+    V4PlanStep,
+)
 
 
 def build_project_agent_flow(

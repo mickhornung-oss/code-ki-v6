@@ -8,8 +8,7 @@ from backend.context_builder import build_user_prompt
 from backend.project_agent_flow import build_project_agent_flow
 from backend.project_guardrails import validate_request_scope
 from backend.prompting import build_messages
-from backend.response_parser import (extract_json_from_text,
-                                     parse_structured_answer)
+from backend.response_parser import extract_json_from_text, parse_structured_answer
 from backend.schemas import AssistRequest, TestStep
 from backend.test_runner import run_test_step
 from backend.v4_workflow import build_v4_workflow

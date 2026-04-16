@@ -1,8 +1,7 @@
 from __future__ import annotations
 
 from backend.config import AppConfig
-from backend.schemas import (AssistRequest, V4PlanStep, V5AlternativePlan,
-                             V5LabWorkflow)
+from backend.schemas import AssistRequest, V4PlanStep, V5AlternativePlan, V5LabWorkflow
 from backend.v4_workflow import select_relevant_files
 
 

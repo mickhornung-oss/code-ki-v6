@@ -10,8 +10,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from backend.project_guardrails import (is_path_within_project,
-                                        resolve_project_root)
+from backend.project_guardrails import is_path_within_project, resolve_project_root
 from backend.schemas import TestResult, TestStep
 
 

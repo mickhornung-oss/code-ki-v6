@@ -4,8 +4,13 @@ import re
 from pathlib import Path
 
 from backend.config import AppConfig
-from backend.schemas import (AssistRequest, StructuredAnswerV3, V4Checkpoint,
-                             V4PlanStep, V4Workflow)
+from backend.schemas import (
+    AssistRequest,
+    StructuredAnswerV3,
+    V4Checkpoint,
+    V4PlanStep,
+    V4Workflow,
+)
 
 _PROMPT_STOPWORDS = {
     "the",

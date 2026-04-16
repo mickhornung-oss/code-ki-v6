@@ -1,8 +1,7 @@
 import unittest
 
 from backend.project_agent_flow import build_project_agent_flow
-from backend.project_guardrails import (is_path_within_project,
-                                        validate_request_scope)
+from backend.project_guardrails import is_path_within_project, validate_request_scope
 from backend.schemas import AssistRequest, StructuredAnswerV3
 
 
