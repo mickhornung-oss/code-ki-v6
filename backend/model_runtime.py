@@ -36,7 +36,9 @@ class ModelRuntime:
         try:
             from llama_cpp import Llama
         except ImportError:
-            raise RuntimeError("llama_cpp not installed. Install via: pip install llama-cpp-python")
+            raise RuntimeError(
+                "llama_cpp not installed. Install via: pip install llama-cpp-python"
+            )
 
         model_path = self.resolved_model_path
         if not model_path or not Path(model_path).exists():
