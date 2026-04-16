@@ -17,4 +17,5 @@ vscode-extension/.vscode-test/
 .vscode/
 .claude/
 node_modules/
+tools/node-*-win-x64/
 tmp_sample.json
