@@ -140,9 +140,9 @@ def build_project_agent_flow(
         ]
         if ambiguous_changes:
             steps[2].status = "blocked"
-            steps[2].details = (
-                "Aenderungsvorschlaege ohne expliziten Dateipfad sind ohne aktive Datei nicht erlaubt."
-            )
+            steps[
+                2
+            ].details = "Aenderungsvorschlaege ohne expliziten Dateipfad sind ohne aktive Datei nicht erlaubt."
             steps[3].status = "skipped"
             steps[4].status = "skipped"
             steps[5].status = "success"

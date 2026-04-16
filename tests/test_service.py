@@ -35,7 +35,8 @@ class ServiceTests(unittest.TestCase):
         )
 
     def test_run_assist_returns_structured_payload_and_test_result(self) -> None:
-        runtime = _FakeRuntime("""
+        runtime = _FakeRuntime(
+            """
             {
               "summary": "Fix return spacing",
               "changes": [
@@ -50,7 +51,8 @@ class ServiceTests(unittest.TestCase):
               ],
               "risks": []
             }
-            """)
+            """
+        )
         request = AssistRequest(
             prompt="Improve function",
             mode="rewrite",
@@ -79,13 +81,15 @@ class ServiceTests(unittest.TestCase):
         self.assertIsNone(result["test_result"])
 
     def test_run_assist_v4_returns_workflow(self) -> None:
-        runtime = _FakeRuntime("""
+        runtime = _FakeRuntime(
+            """
             {
               "summary": "Plan generated",
               "changes": [],
               "risks": []
             }
-            """)
+            """
+        )
         request = AssistRequest(
             prompt="Analyze and explain this file",
             mode="agent_v4",
@@ -109,13 +113,15 @@ class ServiceTests(unittest.TestCase):
         )
 
     def test_run_assist_v4_blocks_without_active_python_file(self) -> None:
-        runtime = _FakeRuntime("""
+        runtime = _FakeRuntime(
+            """
             {
               "summary": "Plan generated",
               "changes": [],
               "risks": []
             }
-            """)
+            """
+        )
         request = AssistRequest(
             prompt="Analyze the active file",
             mode="agent_v4",
@@ -129,13 +135,15 @@ class ServiceTests(unittest.TestCase):
         )
 
     def test_run_assist_v5_lab_returns_alternatives_when_enabled(self) -> None:
-        runtime = _FakeRuntime("""
+        runtime = _FakeRuntime(
+            """
             {
               "summary": "Lab response",
               "changes": [],
               "risks": []
             }
-            """)
+            """
+        )
         request = AssistRequest(
             prompt="Erzeuge alternative Plaene",
             mode="agent_v5_lab",
@@ -151,13 +159,15 @@ class ServiceTests(unittest.TestCase):
         self.assertGreaterEqual(len(result["v5_lab_workflow"]["alternatives"]), 2)
 
     def test_run_assist_v6_returns_compact_success_for_simple_case(self) -> None:
-        runtime = _FakeRuntime("""
+        runtime = _FakeRuntime(
+            """
             {
               "summary": "Nur Analyse",
               "changes": [],
               "risks": []
             }
-            """)
+            """
+        )
         request = AssistRequest(
             prompt="Erklaere kurz diese Funktion",
             mode="agent_v6",
@@ -173,7 +183,8 @@ class ServiceTests(unittest.TestCase):
         self.assertEqual(result["v6_product_flow"]["final_status"], "successful")
 
     def test_run_assist_v6_shows_risk_notice_for_multi_file_changes(self) -> None:
-        runtime = _FakeRuntime("""
+        runtime = _FakeRuntime(
+            """
             {
               "summary": "Mehrdatei-Vorschlag",
               "changes": [
@@ -195,7 +206,8 @@ class ServiceTests(unittest.TestCase):
               ],
               "risks": []
             }
-            """)
+            """
+        )
         request = AssistRequest(
             prompt="Aendere zwei Dateien",
             mode="agent_v6",
@@ -214,7 +226,8 @@ class ServiceTests(unittest.TestCase):
         self.assertEqual(result["v6_product_flow"]["final_status"], "partial")
 
     def test_run_assist_project_agent_returns_flow(self) -> None:
-        runtime = _FakeRuntime("""
+        runtime = _FakeRuntime(
+            """
             {
               "summary": "Projektagent Vorschlag",
               "changes": [
@@ -228,7 +241,8 @@ class ServiceTests(unittest.TestCase):
               ],
               "risks": []
             }
-            """)
+            """
+        )
         request = AssistRequest(
             prompt="Verbessere die aktive Datei",
             mode="agent_project",
