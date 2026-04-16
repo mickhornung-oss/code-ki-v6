@@ -3,15 +3,13 @@ from __future__ import annotations
 from pathlib import Path
 from threading import Lock
 
-from llama_cpp import Llama
-
 from backend.config import AppConfig
 
 
 class ModelRuntime:
     def __init__(self, config: AppConfig) -> None:
         self._config = config
-        self._llm: Llama | None = None
+        self._llm: object | None = None
         self._lock = Lock()
 
     @property
@@ -34,7 +32,12 @@ class ModelRuntime:
             "backend": "llama_cpp_python",
         }
 
-    def _ensure_loaded(self) -> Llama:
+    def _ensure_loaded(self) -> object:
+        try:
+            from llama_cpp import Llama
+        except ImportError:
+            raise RuntimeError("llama_cpp not installed. Install via: pip install llama-cpp-python")
+
         model_path = self.resolved_model_path
         if not model_path or not Path(model_path).exists():
             raise RuntimeError("model_path_missing")
