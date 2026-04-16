@@ -1,5 +1,47 @@
 # Architektur V6 (Produkt) mit V4-Basis und V5-Labor
 
+## System Design Diagram
+
+```mermaid
+graph TB
+    subgraph VS["VS Code Extension"]
+        UI["Agent UI Panel<br/>Modus-Selector"]
+    end
+    
+    subgraph Backend["FastAPI Backend"]
+        API["REST API<br/>/assist<br/>/health"]
+        V6["V6 Agent Engine<br/>strukturiert"]
+        V4["V4 Agent<br/>kontrolliert"]
+        V5["V5 Labor<br/>experimentell"]
+    end
+    
+    subgraph Models["Model Layer"]
+        OAI["OpenAI/Claude<br/>API"]
+        LOCAL["Local Models<br/>Ollama"]
+    end
+    
+    subgraph Persist["Persistierung"]
+        LOGS["Chat-Logs<br/>SQLite"]
+        CACHE["Query Cache"]
+    end
+    
+    UI -->|send_request| API
+    API --> V6
+    API --> V4
+    API --> V5
+    V6 --> OAI
+    V6 --> LOCAL
+    V4 --> OAI
+    V5 --> OAI
+    V6 --> LOGS
+    V5 --> CACHE
+    
+    style VS fill:#4a90e2,color:#fff
+    style Backend fill:#50c878,color:#fff
+    style Models fill:#f39c12,color:#fff
+    style Persist fill:#e74c3c,color:#fff
+```
+
 ## Ziel
 
 Code KI V6 liefert einen produktnahen Standardfluss fuer Python-Arbeitsauftraege in VS Code:
