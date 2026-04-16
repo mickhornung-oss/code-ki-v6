@@ -4,7 +4,8 @@ import re
 from pathlib import Path
 
 from backend.config import AppConfig
-from backend.schemas import AssistRequest, StructuredAnswerV3, V4Checkpoint, V4PlanStep, V4Workflow
+from backend.schemas import (AssistRequest, StructuredAnswerV3, V4Checkpoint,
+                             V4PlanStep, V4Workflow)
 
 _PROMPT_STOPWORDS = {
     "the",
@@ -66,7 +67,9 @@ def select_relevant_files(request: AssistRequest, config: AppConfig) -> list[str
 
     for _, file_path in sorted(scored, key=lambda item: (-item[0], len(item[1]))):
         selected.append(file_path)
-        if len(selected) >= config.v4_file_suggestion_limit + (1 if request.current_file_path else 0):
+        if len(selected) >= config.v4_file_suggestion_limit + (
+            1 if request.current_file_path else 0
+        ):
             break
 
     return selected
@@ -96,10 +99,31 @@ def build_v4_workflow(
                 status="blocked",
                 details="Keine aktive Python-Datei im Kontext uebergeben.",
             ),
-            V4PlanStep(id="change_proposal", title="Aenderungen vorbereiten", purpose="Patch-nahe Aenderungsvorschlaege erzeugen", status="skipped"),
-            V4PlanStep(id="apply_checkpoint", title="Kontrollpunkt vor Anwendung", purpose="Nutzerbestaetigung vor Dateiaenderung einholen", status="skipped"),
-            V4PlanStep(id="test_step", title="Pruefschritt ausfuehren", purpose="Aenderungen mit kleinem Pruefschritt absichern", status="skipped"),
-            V4PlanStep(id="evaluation", title="Ergebnis bewerten", purpose="Gesamtstatus und naechste Aktion zusammenfassen", status="success", details="Ablauf kontrolliert blockiert."),
+            V4PlanStep(
+                id="change_proposal",
+                title="Aenderungen vorbereiten",
+                purpose="Patch-nahe Aenderungsvorschlaege erzeugen",
+                status="skipped",
+            ),
+            V4PlanStep(
+                id="apply_checkpoint",
+                title="Kontrollpunkt vor Anwendung",
+                purpose="Nutzerbestaetigung vor Dateiaenderung einholen",
+                status="skipped",
+            ),
+            V4PlanStep(
+                id="test_step",
+                title="Pruefschritt ausfuehren",
+                purpose="Aenderungen mit kleinem Pruefschritt absichern",
+                status="skipped",
+            ),
+            V4PlanStep(
+                id="evaluation",
+                title="Ergebnis bewerten",
+                purpose="Gesamtstatus und naechste Aktion zusammenfassen",
+                status="success",
+                details="Ablauf kontrolliert blockiert.",
+            ),
         ]
         checkpoints = [
             V4Checkpoint(
@@ -135,10 +159,31 @@ def build_v4_workflow(
                 status="blocked",
                 details=f"Nicht-Python-Datei erkannt: {request.current_file_path}",
             ),
-            V4PlanStep(id="change_proposal", title="Aenderungen vorbereiten", purpose="Patch-nahe Aenderungsvorschlaege erzeugen", status="skipped"),
-            V4PlanStep(id="apply_checkpoint", title="Kontrollpunkt vor Anwendung", purpose="Nutzerbestaetigung vor Dateiaenderung einholen", status="skipped"),
-            V4PlanStep(id="test_step", title="Pruefschritt ausfuehren", purpose="Aenderungen mit kleinem Pruefschritt absichern", status="skipped"),
-            V4PlanStep(id="evaluation", title="Ergebnis bewerten", purpose="Gesamtstatus und naechste Aktion zusammenfassen", status="success", details="Ablauf kontrolliert blockiert."),
+            V4PlanStep(
+                id="change_proposal",
+                title="Aenderungen vorbereiten",
+                purpose="Patch-nahe Aenderungsvorschlaege erzeugen",
+                status="skipped",
+            ),
+            V4PlanStep(
+                id="apply_checkpoint",
+                title="Kontrollpunkt vor Anwendung",
+                purpose="Nutzerbestaetigung vor Dateiaenderung einholen",
+                status="skipped",
+            ),
+            V4PlanStep(
+                id="test_step",
+                title="Pruefschritt ausfuehren",
+                purpose="Aenderungen mit kleinem Pruefschritt absichern",
+                status="skipped",
+            ),
+            V4PlanStep(
+                id="evaluation",
+                title="Ergebnis bewerten",
+                purpose="Gesamtstatus und naechste Aktion zusammenfassen",
+                status="success",
+                details="Ablauf kontrolliert blockiert.",
+            ),
         ]
         checkpoints = [
             V4Checkpoint(
@@ -160,8 +205,12 @@ def build_v4_workflow(
 
     control = dict(request.v4_control or {})
     continue_after_plan = bool(control.get("continue_after_plan", True))
-    continue_after_file_selection = bool(control.get("continue_after_file_selection", True))
-    continue_after_change_proposal = bool(control.get("continue_after_change_proposal", True))
+    continue_after_file_selection = bool(
+        control.get("continue_after_file_selection", True)
+    )
+    continue_after_change_proposal = bool(
+        control.get("continue_after_change_proposal", True)
+    )
 
     relevant_files = select_relevant_files(request, config)
     plan = [
@@ -256,7 +305,9 @@ def build_v4_workflow(
     # Step 3: change proposal
     if structured is None:
         plan[2].status = "failed"
-        plan[2].details = parse_error or "Modellantwort konnte nicht strukturiert geparst werden."
+        plan[2].details = (
+            parse_error or "Modellantwort konnte nicht strukturiert geparst werden."
+        )
         plan[3].status = "skipped"
         plan[4].status = "skipped"
         plan[5].status = "success"
@@ -328,7 +379,9 @@ def build_v4_workflow(
     if structured.test_step or structured.test_result:
         plan[4].status = "success" if structured.test_result else "pending"
         plan[4].details = (
-            f"Pruefschritt-Status: {structured.test_result.status}" if structured.test_result else "Pruefschritt verfuegbar"
+            f"Pruefschritt-Status: {structured.test_result.status}"
+            if structured.test_result
+            else "Pruefschritt verfuegbar"
         )
     else:
         plan[4].status = "skipped"
@@ -337,7 +390,10 @@ def build_v4_workflow(
     plan[5].details = "Ablauf ohne Dateiaenderung abgeschlossen."
     final_status = "successful"
     final_message = "V4-Lauf erfolgreich abgeschlossen."
-    if structured.test_result and structured.test_result.status in {"failed", "warning"}:
+    if structured.test_result and structured.test_result.status in {
+        "failed",
+        "warning",
+    }:
         final_status = "partial"
         final_message = "V4-Lauf teilweise erfolgreich: Vorschlag ohne Dateiaenderung, aber Pruefschritt zeigt Probleme."
     return V4Workflow(

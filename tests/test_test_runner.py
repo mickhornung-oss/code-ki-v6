@@ -14,7 +14,9 @@ class TestRunnerSecurityTests(unittest.TestCase):
         self.assertIn("Nicht erlaubter Testbefehl", result.stderr)
 
     def test_allows_python_unittest_module(self) -> None:
-        result = run_test_command("python -m unittest -h", workspace_root=self.workspace_root)
+        result = run_test_command(
+            "python -m unittest -h", workspace_root=self.workspace_root
+        )
         self.assertIn(result.status, {"success", "failed", "blocked"})
         self.assertNotIn("Nicht erlaubter Testbefehl", result.stderr or "")
 

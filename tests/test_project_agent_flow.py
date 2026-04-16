@@ -1,8 +1,9 @@
 import unittest
 
-from backend.schemas import AssistRequest, StructuredAnswerV3
 from backend.project_agent_flow import build_project_agent_flow
-from backend.project_guardrails import is_path_within_project, validate_request_scope
+from backend.project_guardrails import (is_path_within_project,
+                                        validate_request_scope)
+from backend.schemas import AssistRequest, StructuredAnswerV3
 
 
 class ProjectAgentFlowTests(unittest.TestCase):
@@ -59,7 +60,9 @@ class ProjectAgentFlowTests(unittest.TestCase):
         self.assertEqual(flow.final_status, "successful")
         self.assertEqual(flow.escalation_type, "none")
 
-    def test_change_without_active_file_and_without_target_path_stays_blocked(self) -> None:
+    def test_change_without_active_file_and_without_target_path_stays_blocked(
+        self,
+    ) -> None:
         request = AssistRequest(
             prompt="Aendere den Code im Projekt",
             mode="agent_project",

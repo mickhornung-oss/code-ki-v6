@@ -8,18 +8,21 @@ from backend.context_builder import build_user_prompt
 from backend.project_agent_flow import build_project_agent_flow
 from backend.project_guardrails import validate_request_scope
 from backend.prompting import build_messages
-from backend.response_parser import extract_json_from_text, parse_structured_answer
+from backend.response_parser import (extract_json_from_text,
+                                     parse_structured_answer)
 from backend.schemas import AssistRequest, TestStep
 from backend.test_runner import run_test_step
+from backend.v4_workflow import build_v4_workflow
 from backend.v5_lab import build_v5_lab_workflow
 from backend.v6_product_flow import build_v6_product_flow
-from backend.v4_workflow import build_v4_workflow
 
 if TYPE_CHECKING:
     from backend.model_runtime import ModelRuntime
 
 
-def run_assist(request: AssistRequest, *, config: AppConfig, runtime: ModelRuntime) -> dict:
+def run_assist(
+    request: AssistRequest, *, config: AppConfig, runtime: ModelRuntime
+) -> dict:
     if request.mode in {"agent_v6", "agent_project"}:
         in_scope, scope_error = validate_request_scope(request)
         if not in_scope:
@@ -77,8 +80,16 @@ def run_assist(request: AssistRequest, *, config: AppConfig, runtime: ModelRunti
             )
 
     structured_dict = structured.model_dump() if structured else None
-    test_step_dict = structured.test_step.model_dump() if structured and structured.test_step else None
-    test_result_dict = structured.test_result.model_dump() if structured and structured.test_result else None
+    test_step_dict = (
+        structured.test_step.model_dump()
+        if structured and structured.test_step
+        else None
+    )
+    test_result_dict = (
+        structured.test_result.model_dump()
+        if structured and structured.test_result
+        else None
+    )
     v4_workflow_dict = None
     v5_lab_workflow_dict = None
     v6_product_flow_dict = None

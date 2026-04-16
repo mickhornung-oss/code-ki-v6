@@ -25,9 +25,21 @@ class V4ScenarioCoverageTests(unittest.TestCase):
         )
 
     def test_scenario_a_analysis_only_successful(self) -> None:
-        request = AssistRequest(prompt="Analysiere die aktive Datei.", mode="agent_v4", current_file_path="demo.py")
-        structured = StructuredAnswerV3(summary="Analyse", explanation=None, changes=[], risks=[])
-        workflow = build_v4_workflow(request, self.config, structured=structured, parse_error="", context_summary={})
+        request = AssistRequest(
+            prompt="Analysiere die aktive Datei.",
+            mode="agent_v4",
+            current_file_path="demo.py",
+        )
+        structured = StructuredAnswerV3(
+            summary="Analyse", explanation=None, changes=[], risks=[]
+        )
+        workflow = build_v4_workflow(
+            request,
+            self.config,
+            structured=structured,
+            parse_error="",
+            context_summary={},
+        )
 
         self.assertEqual(workflow.final_status, "successful")
         self.assertEqual(workflow.plan[0].status, "success")
@@ -35,7 +47,11 @@ class V4ScenarioCoverageTests(unittest.TestCase):
         self.assertEqual(workflow.plan[3].status, "skipped")
 
     def test_scenario_b_small_change_blocks_on_apply_checkpoint(self) -> None:
-        request = AssistRequest(prompt="Kleine sichere Aenderung.", mode="agent_v4", current_file_path="demo.py")
+        request = AssistRequest(
+            prompt="Kleine sichere Aenderung.",
+            mode="agent_v4",
+            current_file_path="demo.py",
+        )
         structured = StructuredAnswerV3(
             summary="Change",
             explanation=None,
@@ -51,7 +67,13 @@ class V4ScenarioCoverageTests(unittest.TestCase):
             ],
             risks=[],
         )
-        workflow = build_v4_workflow(request, self.config, structured=structured, parse_error="", context_summary={})
+        workflow = build_v4_workflow(
+            request,
+            self.config,
+            structured=structured,
+            parse_error="",
+            context_summary={},
+        )
 
         self.assertEqual(workflow.final_status, "blocked")
         self.assertEqual(workflow.plan[3].status, "blocked")
@@ -62,26 +84,54 @@ class V4ScenarioCoverageTests(unittest.TestCase):
             prompt="Plane mehrere Schritte und pruefe den Ablauf.",
             mode="agent_v4",
             current_file_path="backend/service.py",
-            workspace_files=["backend/service.py", "backend/response_parser.py", "backend/context_builder.py"],
+            workspace_files=[
+                "backend/service.py",
+                "backend/response_parser.py",
+                "backend/context_builder.py",
+            ],
         )
-        structured = StructuredAnswerV3(summary="Plan", explanation=None, changes=[], risks=[])
-        workflow = build_v4_workflow(request, self.config, structured=structured, parse_error="", context_summary={})
+        structured = StructuredAnswerV3(
+            summary="Plan", explanation=None, changes=[], risks=[]
+        )
+        workflow = build_v4_workflow(
+            request,
+            self.config,
+            structured=structured,
+            parse_error="",
+            context_summary={},
+        )
 
         self.assertEqual(len(workflow.plan), 6)
         self.assertEqual(workflow.plan[0].id, "plan")
         self.assertEqual(workflow.plan[5].id, "evaluation")
-        self.assertIn(workflow.final_status, {"successful", "partial", "blocked", "failed"})
+        self.assertIn(
+            workflow.final_status, {"successful", "partial", "blocked", "failed"}
+        )
 
     def test_scenario_d_controlled_blocking_without_active_file(self) -> None:
         request = AssistRequest(prompt="Mach etwas.", mode="agent_v4")
-        structured = StructuredAnswerV3(summary="x", explanation=None, changes=[], risks=[])
-        workflow = build_v4_workflow(request, self.config, structured=structured, parse_error="", context_summary={})
+        structured = StructuredAnswerV3(
+            summary="x", explanation=None, changes=[], risks=[]
+        )
+        workflow = build_v4_workflow(
+            request,
+            self.config,
+            structured=structured,
+            parse_error="",
+            context_summary={},
+        )
 
         self.assertEqual(workflow.final_status, "blocked")
-        self.assertTrue(any(cp.id == "require_active_python_file" for cp in workflow.checkpoints))
+        self.assertTrue(
+            any(cp.id == "require_active_python_file" for cp in workflow.checkpoints)
+        )
 
     def test_scenario_e_partial_when_test_warns(self) -> None:
-        request = AssistRequest(prompt="Analysiere inkl. Testwarnung", mode="agent_v4", current_file_path="demo.py")
+        request = AssistRequest(
+            prompt="Analysiere inkl. Testwarnung",
+            mode="agent_v4",
+            current_file_path="demo.py",
+        )
         structured = StructuredAnswerV3(
             summary="analysis",
             explanation=None,
@@ -95,7 +145,13 @@ class V4ScenarioCoverageTests(unittest.TestCase):
                 "exit_code": 0,
             },
         )
-        workflow = build_v4_workflow(request, self.config, structured=structured, parse_error="", context_summary={})
+        workflow = build_v4_workflow(
+            request,
+            self.config,
+            structured=structured,
+            parse_error="",
+            context_summary={},
+        )
 
         self.assertEqual(workflow.final_status, "partial")
 

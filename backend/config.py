@@ -5,7 +5,6 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CONFIG_DIR = REPO_ROOT / "config"
 CONFIG_PATH = CONFIG_DIR / "app_config.json"
@@ -60,7 +59,9 @@ def load_config() -> AppConfig:
     payload.update(_read_json(LOCAL_CONFIG_PATH))
     marker_payload = _read_json(V5_LAB_MARKER_PATH)
     marker_v5 = marker_payload.get("v5_lab") if isinstance(marker_payload, dict) else {}
-    v5_enabled = bool(marker_v5.get("enabled")) if isinstance(marker_v5, dict) else False
+    v5_enabled = (
+        bool(marker_v5.get("enabled")) if isinstance(marker_v5, dict) else False
+    )
 
     return AppConfig(
         host=str(payload.get("host") or "127.0.0.1"),

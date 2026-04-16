@@ -27,7 +27,11 @@ class V5LabWorkflowTests(unittest.TestCase):
         )
 
     def test_blocks_when_lab_disabled(self) -> None:
-        request = AssistRequest(prompt="Plane Alternativen", mode="agent_v5_lab", current_file_path="demo.py")
+        request = AssistRequest(
+            prompt="Plane Alternativen",
+            mode="agent_v5_lab",
+            current_file_path="demo.py",
+        )
         workflow = build_v5_lab_workflow(request, self.base_config)
         self.assertEqual(workflow.final_status, "blocked")
         self.assertFalse(workflow.lab_enabled)
@@ -39,7 +43,11 @@ class V5LabWorkflowTests(unittest.TestCase):
             prompt="Optimiere add Funktion",
             mode="agent_v5_lab",
             current_file_path="demo.py",
-            workspace_files=["demo.py", "backend/service.py", "backend/response_parser.py"],
+            workspace_files=[
+                "demo.py",
+                "backend/service.py",
+                "backend/response_parser.py",
+            ],
         )
         workflow = build_v5_lab_workflow(request, config)
         self.assertEqual(workflow.final_status, "successful")

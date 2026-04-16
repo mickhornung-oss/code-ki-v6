@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from pathlib import Path
 import re
+from pathlib import Path
 
 from backend.schemas import AssistRequest, StructuredAnswerV3
-
 
 _EXTERNAL_BLOCKER_PATTERNS = [
     re.compile(r"\bpip\s+install\b", re.IGNORECASE),
@@ -27,7 +26,9 @@ def resolve_project_root(workspace_root: str | None) -> str | None:
         return None
 
 
-def is_path_within_project(candidate_path: str | None, project_root: str | None) -> bool:
+def is_path_within_project(
+    candidate_path: str | None, project_root: str | None
+) -> bool:
     if not candidate_path or not project_root:
         return False
     try:
@@ -52,7 +53,10 @@ def validate_request_scope(request: AssistRequest) -> tuple[bool, str]:
 
     for path in scoped_paths:
         if not is_path_within_project(path, project_root):
-            return False, f"Pfad ausserhalb des erlaubten Projektordners erkannt: {path}"
+            return (
+                False,
+                f"Pfad ausserhalb des erlaubten Projektordners erkannt: {path}",
+            )
 
     return True, ""
 
@@ -68,10 +72,16 @@ def detect_external_blocker(prompt: str) -> str | None:
     return None
 
 
-def detect_out_of_scope_changes(structured: StructuredAnswerV3 | None, project_root: str | None) -> str | None:
+def detect_out_of_scope_changes(
+    structured: StructuredAnswerV3 | None, project_root: str | None
+) -> str | None:
     if structured is None or not project_root:
         return None
     for change in structured.changes:
-        if change.file_path and not is_path_within_project(change.file_path, project_root):
-            return f"Vorgeschlagene Aenderung ausserhalb Projektordner: {change.file_path}"
+        if change.file_path and not is_path_within_project(
+            change.file_path, project_root
+        ):
+            return (
+                f"Vorgeschlagene Aenderung ausserhalb Projektordner: {change.file_path}"
+            )
     return None

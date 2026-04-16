@@ -64,7 +64,10 @@ def parse_structured_answer(raw_answer: str) -> tuple[StructuredAnswerV3 | None,
                 if line_start < 1 or line_end < 1:
                     return None, f"Ungültige Zeilennummern: {line_start}, {line_end}"
                 if line_start > line_end:
-                    return None, f"Startzeile größer als Endzeile: {line_start} > {line_end}"
+                    return (
+                        None,
+                        f"Startzeile größer als Endzeile: {line_start} > {line_end}",
+                    )
 
             file_path = change.get("file_path")
             if file_path and not isinstance(file_path, str):
@@ -103,6 +106,6 @@ def extract_json_from_text(text: str) -> str:
     end = text.rfind("}")
 
     if start != -1 and end != -1 and end > start:
-        return text[start:end+1]
+        return text[start : end + 1]
 
     return text

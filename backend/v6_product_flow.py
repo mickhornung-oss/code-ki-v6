@@ -11,12 +11,16 @@ def _is_python_context_valid(request: AssistRequest) -> tuple[bool, str | None]:
     return True, None
 
 
-def _estimate_risk(request: AssistRequest, structured: StructuredAnswerV3 | None, parse_error: str) -> tuple[str, list[str]]:
+def _estimate_risk(
+    request: AssistRequest, structured: StructuredAnswerV3 | None, parse_error: str
+) -> tuple[str, list[str]]:
     reasons: list[str] = []
     risk_level = "low"
 
     if parse_error:
-        reasons.append("Modellantwort konnte nicht stabil als strukturierte Antwort geparst werden.")
+        reasons.append(
+            "Modellantwort konnte nicht stabil als strukturierte Antwort geparst werden."
+        )
         return "high", reasons
 
     if structured is None:
@@ -111,8 +115,12 @@ def build_v6_product_flow(
 
     if risk_level == "high":
         final_status = "partial"
-        final_message = "V6-Lauf mit erhoehter Vorsicht: bitte Vorschlaege vor Apply genau pruefen."
-        next_action = "Vor Anwendung zuerst Risikohinweise pruefen, dann optional anwenden."
+        final_message = (
+            "V6-Lauf mit erhoehter Vorsicht: bitte Vorschlaege vor Apply genau pruefen."
+        )
+        next_action = (
+            "Vor Anwendung zuerst Risikohinweise pruefen, dann optional anwenden."
+        )
     elif risk_level == "medium":
         final_status = "partial"
         final_message = "V6-Lauf mit moderatem Risiko: Vorschlag ist vorhanden, zusaetzliche Pruefung empfohlen."

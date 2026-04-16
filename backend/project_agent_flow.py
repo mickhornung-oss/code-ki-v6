@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-from backend.project_guardrails import (
-    detect_external_blocker,
-    detect_out_of_scope_changes,
-    resolve_project_root,
-)
-from backend.schemas import AssistRequest, ProjectAgentFlow, StructuredAnswerV3, V4PlanStep
+from backend.project_guardrails import (detect_external_blocker,
+                                        detect_out_of_scope_changes,
+                                        resolve_project_root)
+from backend.schemas import (AssistRequest, ProjectAgentFlow,
+                             StructuredAnswerV3, V4PlanStep)
 
 
 def build_project_agent_flow(
@@ -15,15 +14,47 @@ def build_project_agent_flow(
     parse_error: str,
 ) -> ProjectAgentFlow:
     project_root = resolve_project_root(request.workspace_root)
-    autonomy_approved = bool((request.agent_control or {}).get("autonomy_approved", False))
+    autonomy_approved = bool(
+        (request.agent_control or {}).get("autonomy_approved", False)
+    )
 
     steps = [
-        V4PlanStep(id="analyze", title="Auftrag analysieren", purpose="Aufgabe und Kontext erfassen", status="success"),
-        V4PlanStep(id="locate_files", title="Dateien bestimmen", purpose="Relevante Dateien im Projektordner finden", status="pending"),
-        V4PlanStep(id="propose", title="Vorschlag erzeugen", purpose="Strukturierte Aenderungen erzeugen", status="pending"),
-        V4PlanStep(id="apply", title="Aenderungen anwenden", purpose="Aenderungen kontrolliert in der aktiven Datei umsetzen", status="pending"),
-        V4PlanStep(id="test", title="Pruefschritt ausfuehren", purpose="Syntax-/Testcheck ausfuehren", status="pending"),
-        V4PlanStep(id="evaluate", title="Ergebnis bewerten", purpose="Status und naechste Aktion liefern", status="pending"),
+        V4PlanStep(
+            id="analyze",
+            title="Auftrag analysieren",
+            purpose="Aufgabe und Kontext erfassen",
+            status="success",
+        ),
+        V4PlanStep(
+            id="locate_files",
+            title="Dateien bestimmen",
+            purpose="Relevante Dateien im Projektordner finden",
+            status="pending",
+        ),
+        V4PlanStep(
+            id="propose",
+            title="Vorschlag erzeugen",
+            purpose="Strukturierte Aenderungen erzeugen",
+            status="pending",
+        ),
+        V4PlanStep(
+            id="apply",
+            title="Aenderungen anwenden",
+            purpose="Aenderungen kontrolliert in der aktiven Datei umsetzen",
+            status="pending",
+        ),
+        V4PlanStep(
+            id="test",
+            title="Pruefschritt ausfuehren",
+            purpose="Syntax-/Testcheck ausfuehren",
+            status="pending",
+        ),
+        V4PlanStep(
+            id="evaluate",
+            title="Ergebnis bewerten",
+            purpose="Status und naechste Aktion liefern",
+            status="pending",
+        ),
     ]
 
     if not project_root:
@@ -94,12 +125,18 @@ def build_project_agent_flow(
             next_action="Auftrag konkretisieren und erneut starten.",
         )
 
-    has_active_file_context = bool(request.current_file_path and request.current_file_text)
+    has_active_file_context = bool(
+        request.current_file_path and request.current_file_text
+    )
     if not has_active_file_context and structured.changes:
-        ambiguous_changes = [change for change in structured.changes if not change.file_path]
+        ambiguous_changes = [
+            change for change in structured.changes if not change.file_path
+        ]
         if ambiguous_changes:
             steps[2].status = "blocked"
-            steps[2].details = "Aenderungsvorschlaege ohne expliziten Dateipfad sind ohne aktive Datei nicht erlaubt."
+            steps[2].details = (
+                "Aenderungsvorschlaege ohne expliziten Dateipfad sind ohne aktive Datei nicht erlaubt."
+            )
             steps[3].status = "skipped"
             steps[4].status = "skipped"
             steps[5].status = "success"
@@ -141,9 +178,17 @@ def build_project_agent_flow(
     steps[2].status = "success"
     steps[2].details = f"{len(structured.changes)} Aenderung(en) vorgeschlagen"
     steps[3].status = "success" if structured.changes else "skipped"
-    steps[3].details = "Auto-Apply wird in der Extension kontrolliert ausgeloest." if structured.changes else "Keine Aenderungen zum Anwenden."
+    steps[3].details = (
+        "Auto-Apply wird in der Extension kontrolliert ausgeloest."
+        if structured.changes
+        else "Keine Aenderungen zum Anwenden."
+    )
     steps[4].status = "success" if structured.test_step else "skipped"
-    steps[4].details = "Pruefschritt automatisiert eingehaengt." if structured.test_step else "Kein Pruefschritt vorhanden."
+    steps[4].details = (
+        "Pruefschritt automatisiert eingehaengt."
+        if structured.test_step
+        else "Kein Pruefschritt vorhanden."
+    )
     steps[5].status = "success"
 
     return ProjectAgentFlow(

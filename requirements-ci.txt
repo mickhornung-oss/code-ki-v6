@@ -1,0 +1,5 @@
+# CI requirements — excludes llama-cpp-python (C extension, not needed for tests)
+# Tests use _FakeRuntime instead of the real model runtime.
+fastapi==0.135.2
+uvicorn==0.42.0
+pydantic==2.12.5

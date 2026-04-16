@@ -42,7 +42,9 @@ class V4WorkflowTests(unittest.TestCase):
         self.assertIn("backend/response_parser.py", result)
 
     def test_v4_blocks_at_apply_checkpoint_when_changes_exist(self) -> None:
-        request = AssistRequest(prompt="Improve add function", mode="agent_v4", current_file_path="demo.py")
+        request = AssistRequest(
+            prompt="Improve add function", mode="agent_v4", current_file_path="demo.py"
+        )
         structured = StructuredAnswerV3(
             summary="changes",
             explanation=None,
@@ -69,7 +71,9 @@ class V4WorkflowTests(unittest.TestCase):
         self.assertTrue(any(cp.id == "apply_changes" for cp in workflow.checkpoints))
 
     def test_v4_fails_when_structured_payload_missing(self) -> None:
-        request = AssistRequest(prompt="Do work", mode="agent_v4", current_file_path="demo.py")
+        request = AssistRequest(
+            prompt="Do work", mode="agent_v4", current_file_path="demo.py"
+        )
         workflow = build_v4_workflow(
             request,
             self.config,
@@ -81,7 +85,9 @@ class V4WorkflowTests(unittest.TestCase):
         self.assertIn("nicht sicher", workflow.final_message.lower())
 
     def test_v4_marks_partial_when_test_result_warns(self) -> None:
-        request = AssistRequest(prompt="Analyze", mode="agent_v4", current_file_path="demo.py")
+        request = AssistRequest(
+            prompt="Analyze", mode="agent_v4", current_file_path="demo.py"
+        )
         structured = StructuredAnswerV3(
             summary="analysis",
             explanation=None,
@@ -109,13 +115,17 @@ class V4WorkflowTests(unittest.TestCase):
         workflow = build_v4_workflow(
             request,
             self.config,
-            structured=StructuredAnswerV3(summary="x", explanation=None, changes=[], risks=[]),
+            structured=StructuredAnswerV3(
+                summary="x", explanation=None, changes=[], risks=[]
+            ),
             parse_error="",
             context_summary={},
         )
         self.assertEqual(workflow.final_status, "blocked")
         self.assertIn("keine aktive python-datei", workflow.final_message.lower())
-        self.assertTrue(any(cp.id == "require_active_python_file" for cp in workflow.checkpoints))
+        self.assertTrue(
+            any(cp.id == "require_active_python_file" for cp in workflow.checkpoints)
+        )
 
     def test_v4_blocks_for_non_python_active_file(self) -> None:
         request = AssistRequest(
@@ -126,13 +136,17 @@ class V4WorkflowTests(unittest.TestCase):
         workflow = build_v4_workflow(
             request,
             self.config,
-            structured=StructuredAnswerV3(summary="x", explanation=None, changes=[], risks=[]),
+            structured=StructuredAnswerV3(
+                summary="x", explanation=None, changes=[], risks=[]
+            ),
             parse_error="",
             context_summary={},
         )
         self.assertEqual(workflow.final_status, "blocked")
         self.assertIn("keine python-datei", workflow.final_message.lower())
-        self.assertTrue(any(cp.id == "require_python_file_type" for cp in workflow.checkpoints))
+        self.assertTrue(
+            any(cp.id == "require_python_file_type" for cp in workflow.checkpoints)
+        )
 
     def test_v4_plan_has_expected_step_order(self) -> None:
         request = AssistRequest(
@@ -143,13 +157,22 @@ class V4WorkflowTests(unittest.TestCase):
         workflow = build_v4_workflow(
             request,
             self.config,
-            structured=StructuredAnswerV3(summary="analysis", explanation=None, changes=[], risks=[]),
+            structured=StructuredAnswerV3(
+                summary="analysis", explanation=None, changes=[], risks=[]
+            ),
             parse_error="",
             context_summary={},
         )
         self.assertEqual(
             [step.id for step in workflow.plan],
-            ["plan", "file_selection", "change_proposal", "apply_checkpoint", "test_step", "evaluation"],
+            [
+                "plan",
+                "file_selection",
+                "change_proposal",
+                "apply_checkpoint",
+                "test_step",
+                "evaluation",
+            ],
         )
         self.assertEqual(workflow.final_status, "successful")
 

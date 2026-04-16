@@ -16,26 +16,38 @@ def _clip_text(value: str | None, *, max_chars: int) -> str | None:
 
 
 def build_context_summary(request: AssistRequest, config: AppConfig) -> dict:
-    clipped_file = _clip_text(request.current_file_text, max_chars=config.file_context_max_chars)
-    clipped_selection = _clip_text(request.selected_text, max_chars=config.selection_max_chars)
-    clipped_traceback = _clip_text(request.traceback_text, max_chars=config.traceback_max_chars)
-    
+    clipped_file = _clip_text(
+        request.current_file_text, max_chars=config.file_context_max_chars
+    )
+    clipped_selection = _clip_text(
+        request.selected_text, max_chars=config.selection_max_chars
+    )
+    clipped_traceback = _clip_text(
+        request.traceback_text, max_chars=config.traceback_max_chars
+    )
+
     # V2: Zusatzdateien kontrolliert verarbeiten
     additional_files_context = []
     max_files = config.max_additional_files
     for i, file in enumerate(request.additional_files):
         if i >= max_files:
             break
-        clipped_content = _clip_text(file.file_text, max_chars=config.file_context_max_chars)
+        clipped_content = _clip_text(
+            file.file_text, max_chars=config.file_context_max_chars
+        )
         if clipped_content:
-            additional_files_context.append({
-                "file_path": file.file_path,
-                "description": file.description,
-                "content": clipped_content,
-                "chars": len(clipped_content)
-            })
-    
-    workspace_files = [str(path).strip() for path in request.workspace_files if str(path).strip()]
+            additional_files_context.append(
+                {
+                    "file_path": file.file_path,
+                    "description": file.description,
+                    "content": clipped_content,
+                    "chars": len(clipped_content),
+                }
+            )
+
+    workspace_files = [
+        str(path).strip() for path in request.workspace_files if str(path).strip()
+    ]
     workspace_files = workspace_files[: config.max_workspace_files]
 
     return {
@@ -72,7 +84,7 @@ def build_user_prompt(request: AssistRequest, config: AppConfig) -> tuple[str, d
             "Workspace-Dateiindex (begrenzter Auszug):\n"
             + "\n".join(f"- {path}" for path in context["workspace_files"][:20])
         )
-    
+
     # V2: Zusatzdateien kontrolliert in den Prompt einbauen
     if context["has_additional_files"]:
         sections.append(f"Zusatzdateien ({context['additional_files_count']} Dateien):")
@@ -80,11 +92,15 @@ def build_user_prompt(request: AssistRequest, config: AppConfig) -> tuple[str, d
             desc = f" - {file['description']}" if file["description"] else ""
             sections.append(f"Datei: {file['file_path']}{desc}")
             sections.append(f"```python\n{file['content']}\n```")
-    
+
     if context["traceback_text"]:
         sections.append(f"Traceback / Fehler:\n{context['traceback_text']}")
     if context["selected_text"]:
-        sections.append(f"Markierter Bereich:\n```python\n{context['selected_text']}\n```")
+        sections.append(
+            f"Markierter Bereich:\n```python\n{context['selected_text']}\n```"
+        )
     if context["file_context"]:
-        sections.append(f"Aktuelle Datei (Kontextauszug):\n```python\n{context['file_context']}\n```")
+        sections.append(
+            f"Aktuelle Datei (Kontextauszug):\n```python\n{context['file_context']}\n```"
+        )
     return "\n\n".join(sections), context

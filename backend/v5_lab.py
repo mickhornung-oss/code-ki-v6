@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 from backend.config import AppConfig
-from backend.schemas import AssistRequest, V4PlanStep, V5AlternativePlan, V5LabWorkflow
+from backend.schemas import (AssistRequest, V4PlanStep, V5AlternativePlan,
+                             V5LabWorkflow)
 from backend.v4_workflow import select_relevant_files
 
 
-def _conservative_plan(request: AssistRequest, relevant_files: list[str]) -> V5AlternativePlan:
+def _conservative_plan(
+    request: AssistRequest, relevant_files: list[str]
+) -> V5AlternativePlan:
     active_file = request.current_file_path or "aktive-datei.py"
     steps = [
         V4PlanStep(
@@ -41,7 +44,9 @@ def _conservative_plan(request: AssistRequest, relevant_files: list[str]) -> V5A
     )
 
 
-def _bolder_plan(request: AssistRequest, relevant_files: list[str]) -> V5AlternativePlan:
+def _bolder_plan(
+    request: AssistRequest, relevant_files: list[str]
+) -> V5AlternativePlan:
     active_file = request.current_file_path or "aktive-datei.py"
     candidate_files = [path for path in relevant_files if path != active_file][:2]
     files = [active_file] + candidate_files

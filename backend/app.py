@@ -7,7 +7,6 @@ from backend.model_runtime import ModelRuntime
 from backend.schemas import AssistRequest
 from backend.service import run_assist
 
-
 """
 Code KI V6 Backend API
 
@@ -28,10 +27,10 @@ app = FastAPI(title="Code KI", version="6.0.0")
 def health() -> dict:
     """
     Health Check Endpoint
-    
+
     Returns:
         dict: Status des Backends mit Service-Info, Host und Port
-        
+
     Example:
         {
             "status": "healthy",
@@ -52,16 +51,16 @@ def health() -> dict:
 def assist(request: AssistRequest) -> dict:
     """
     Hauptendpoint für Code-KI Assistenz
-    
+
     Args:
         request (AssistRequest): Anfrage mit Prompt, Modus, und Kontext
-        
+
     Returns:
         dict: Strukturierte Response mit Code, Tests, und Status
-        
+
     Raises:
         HTTPException: Bei Modell-Fehlern oder Konfigurationsproblemen
-        
+
     Mögliche Modi (request.mode):
         - "v6_product": Standardmodus mit strukturierter Output
         - "agent_v4": Kontrollierter Modus für kritische Aufgaben

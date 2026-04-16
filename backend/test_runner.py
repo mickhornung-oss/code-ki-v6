@@ -10,8 +10,9 @@ import sys
 import tempfile
 from pathlib import Path
 
-from backend.project_guardrails import is_path_within_project, resolve_project_root
-from backend.schemas import TestStep, TestResult
+from backend.project_guardrails import (is_path_within_project,
+                                        resolve_project_root)
+from backend.schemas import TestResult, TestStep
 
 
 def run_syntax_check(code: str) -> TestResult:
@@ -194,7 +195,9 @@ def run_test_command(command: str, workspace_root: str | None = None) -> TestRes
         )
 
 
-def run_test_step(test_step: TestStep, code: str | None = None, workspace_root: str | None = None) -> TestResult:
+def run_test_step(
+    test_step: TestStep, code: str | None = None, workspace_root: str | None = None
+) -> TestResult:
     """
     Fuehrt einen Pruefschritt basierend auf dem Typ aus.
 
